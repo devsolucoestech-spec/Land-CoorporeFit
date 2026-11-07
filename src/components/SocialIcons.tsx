@@ -1,4 +1,6 @@
 import type { SVGProps } from 'react'
+import { SITE, WHATSAPP_MESSAGES } from '../config/site'
+import { hasWhatsapp, whatsappUrl } from '../lib/whatsapp'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -31,25 +33,33 @@ export function FacebookIcon(props: IconProps) {
   )
 }
 
-export function TwitterIcon(props: IconProps) {
+export function WhatsappIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
     </svg>
   )
 }
 
-const LINKS = [
-  { label: 'Twitter', Icon: TwitterIcon },
-  { label: 'Facebook', Icon: FacebookIcon },
-  { label: 'Instagram', Icon: InstagramIcon },
-]
-
+/** Redes configuradas em config/site.ts. Redes sem link não aparecem. */
 export function SocialLinks() {
+  const links = [
+    SITE.instagram.url && { label: 'Instagram', href: SITE.instagram.url, Icon: InstagramIcon },
+    SITE.facebook && { label: 'Facebook', href: SITE.facebook, Icon: FacebookIcon },
+    hasWhatsapp && { label: 'WhatsApp', href: whatsappUrl(WHATSAPP_MESSAGES.general), Icon: WhatsappIcon },
+  ].filter(Boolean) as { label: string; href: string; Icon: typeof InstagramIcon }[]
+
   return (
     <div className="flex gap-3">
-      {LINKS.map(({ label, Icon }) => (
-        <a key={label} href="#" aria-label={label} className="text-foreground transition-colors hover:text-primary">
+      {links.map(({ label, href, Icon }) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={label}
+          className="grid h-10 w-10 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-primary hover:text-primary"
+        >
           <Icon className="h-4 w-4" />
         </a>
       ))}

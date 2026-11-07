@@ -1,8 +1,8 @@
-const ITEMS = ['Musculação', 'HIIT', 'Funcional', 'Cardio', 'Crossfit', 'Personal']
+const ITEMS = ['Musculação', 'Personal', 'HIIT', 'Funcional', 'Acompanhamento']
 
 export function Marquee() {
   return (
-    <section data-scroll-bg="black" aria-hidden="true" className="overflow-hidden pt-24">
+    <section data-scroll-bg="black" aria-hidden="true" className="overflow-hidden pt-28">
       <div className="overflow-hidden border-y border-border py-5">
         <div className="marquee-track flex w-max">
           {Array.from({ length: 2 }).map((_, copy) => (

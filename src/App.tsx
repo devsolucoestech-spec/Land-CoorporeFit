@@ -1,26 +1,28 @@
 import { useEffect } from 'react'
+import { BackToTop } from './components/BackToTop'
 import { Section, SectionFlow } from './components/sectionflow/core/section-flow'
 import type { TransitionComponent, TransitionProps } from './components/sectionflow/core/types'
 import { PinReveal } from './components/sectionflow/transitions/pin-reveal'
 import { useScrollAnimations } from './hooks/useScrollAnimations'
-import { About } from './sections/About'
-import { CallToAction } from './sections/CallToAction'
+import { Faq } from './sections/Faq'
+import { FinalCta } from './sections/FinalCta'
 import { Footer } from './sections/Footer'
 import { Header } from './sections/Header'
 import { Hero } from './sections/Hero'
-import { InstagramGallery } from './sections/InstagramGallery'
+import { Instagram } from './sections/Instagram'
 import { Marquee } from './sections/Marquee'
-import { Performance } from './sections/Performance'
+import { Modalities } from './sections/Modalities'
 import { Pricing } from './sections/Pricing'
-import { Programs } from './sections/Programs'
 import { Schedule } from './sections/Schedule'
+import { Structure } from './sections/Structure'
 import { Testimonials } from './sections/Testimonials'
-import { Trainers } from './sections/Trainers'
 
 /** Saída do hero: a próxima seção sobe por cima. Pausas curtas (em vh) para o topo não parecer travado. */
 const HeroTransition = Object.assign((props: TransitionProps) => <PinReveal {...props} />, {
   timing: { rest: 20, duration: 100 },
 }) satisfies TransitionComponent
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
  * Âncoras dentro do SectionFlow ficam presas na tela, então o navegador não sabe rolar até elas.
@@ -55,28 +57,42 @@ export default function App() {
 
   return (
     <>
+      <a
+        href="#conteudo"
+        className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+      >
+        Pular para o conteúdo
+      </a>
       <Header />
-      <main ref={ref} className="overflow-x-clip text-foreground">
+      <main id="conteudo" ref={ref} className="overflow-x-clip text-foreground">
         <div className="scroll-bg" aria-hidden="true" />
-        <SectionFlow>
-          <Section transition={HeroTransition} className="bg-background">
+        {reduceMotion ? (
+          <>
             <Hero />
-          </Section>
-          <Section className="bg-background">
             <Marquee />
-            <Programs />
-          </Section>
-        </SectionFlow>
-        <About />
-        <Schedule />
-        <Performance />
+            <Modalities />
+          </>
+        ) : (
+          <SectionFlow>
+            <Section transition={HeroTransition} className="bg-background">
+              <Hero />
+            </Section>
+            <Section className="bg-background">
+              <Marquee />
+              <Modalities />
+            </Section>
+          </SectionFlow>
+        )}
         <Pricing />
-        <Trainers />
-        <InstagramGallery />
+        <Schedule />
+        <Structure />
+        <Instagram />
         <Testimonials />
-        <CallToAction />
-        <Footer />
+        <Faq />
+        <FinalCta />
       </main>
+      <Footer />
+      <BackToTop />
     </>
   )
 }

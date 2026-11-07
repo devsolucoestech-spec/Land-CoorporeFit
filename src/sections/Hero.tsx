@@ -1,18 +1,17 @@
-import { useEffect, useState, type PointerEvent } from 'react'
-import heroInstrutores from '../assets/hero-instrutores.jpg'
+import { MapPin } from 'lucide-react'
+import type { PointerEvent } from 'react'
+import hero1280 from '../assets/hero-1280.webp'
+import hero1920 from '../assets/hero-1920.webp'
+import hero2880 from '../assets/hero-2880.webp'
+import hero3840 from '../assets/hero-3840.webp'
+import { SlideTextButton } from '../components/SlideTextButton'
+import { SITE } from '../config/site'
 
-/** Fotos do hero. Com mais de uma, elas alternam em crossfade e aparecem os indicadores. */
-const SLIDES = [{ src: heroInstrutores, label: 'Instrutores da Corpore Fit', position: '68% 20%' }]
-const SLIDE_INTERVAL = 4500
+const HERO_SRCSET = `${hero1280} 1280w, ${hero1920} 1920w, ${hero2880} 2880w, ${hero3840} 3840w`
+const TAGS = ['Musculação', 'Funcional', 'HIIT', 'Acompanhamento']
 
 export function Hero() {
-  const [active, setActive] = useState(0)
-
-  useEffect(() => {
-    if (SLIDES.length < 2) return
-    const id = window.setInterval(() => setActive((i) => (i + 1) % SLIDES.length), SLIDE_INTERVAL)
-    return () => window.clearInterval(id)
-  }, [])
+  const location = [SITE.address.street, SITE.address.city].filter(Boolean).join(' · ')
 
   const handlePointerMove = (e: PointerEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -26,68 +25,77 @@ export function Hero() {
       onPointerMove={handlePointerMove}
       className="relative flex min-h-screen items-stretch overflow-hidden bg-background"
     >
-      <div aria-hidden="true" className="absolute inset-x-0 top-20 bottom-0 z-[1] overflow-hidden">
+      <div aria-hidden="true" className="absolute inset-x-0 top-24 bottom-0 z-[1] overflow-hidden">
         <div
           className="absolute inset-0 transition-transform duration-[1400ms] ease-out motion-reduce:transform-none!"
           style={{
             transform: 'translate3d(calc(var(--px, 0) * -24px), calc(var(--py, 0) * -16px), 0) scale(1.05)',
           }}
         >
-          {SLIDES.map((slide, i) => (
-            <img
-              key={slide.src}
-              src={slide.src}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover saturate-[1.05] contrast-[1.05] transition-opacity duration-[1200ms]"
-              style={{ objectPosition: slide.position, opacity: i === active ? 1 : 0 }}
-            />
-          ))}
+          <img
+            src={hero1920}
+            srcSet={HERO_SRCSET}
+            sizes="100vw"
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-[68%_20%]"
+          />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgb(8_8_8/0.55),rgb(8_8_8/0.15)_35%,rgb(8_8_8/0.9)),linear-gradient(90deg,rgb(8_8_8/0.8),rgb(71_0_0/0.25)_60%,transparent)]" />
-        <div className="absolute inset-0 bg-background/45 md:hidden" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgb(8_8_8/0.55),rgb(8_8_8/0.15)_35%,rgb(8_8_8/0.9)),linear-gradient(90deg,rgb(8_8_8/0.85),rgb(8_8_8/0.35)_45%,rgb(71_0_0/0.2)_65%,transparent)]" />
+        <div className="absolute inset-0 bg-background/50 md:hidden" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-[38%] bg-[radial-gradient(circle,#fff_1.5px,transparent_2.2px)] bg-[length:32px_32px] opacity-10 [mask-image:linear-gradient(transparent,#000_30%,#000_70%,transparent)]" />
-        {SLIDES.length > 1 && (
-          <div className="absolute right-6 bottom-6 z-[3] flex gap-2">
-            {SLIDES.map((slide, i) => (
-              <button
-                key={slide.src}
-                aria-label={slide.label}
-                onClick={() => setActive(i)}
-                className={`h-1 cursor-pointer rounded-sm transition-all duration-300 ${
-                  i === active ? 'w-8 bg-primary' : 'w-3 bg-white/40'
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
-      <div className="container-gym relative z-[2] self-end py-[clamp(48px,6vw,96px)]">
-        <div className="fade-up">
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <span className="inline-flex overflow-hidden rounded font-display text-[10px] font-bold tracking-[0.14em] whitespace-nowrap uppercase shadow-[0_2px_8px_rgb(8_8_8/0.3)] sm:text-xs">
-              <span className="inline-flex items-center bg-card px-3 py-2 text-white">★ ★ ★</span>
-              <span className="inline-flex items-center bg-white px-3.5 py-2 text-background">Musculação</span>
-              <span className="inline-flex items-center bg-primary px-3.5 py-2 text-primary-foreground">
-                Funcional & HIIT
+      <div className="container-gym relative z-[2] self-center pt-32 pb-16 md:pt-28 md:pb-12">
+        <div className="fade-up max-w-4xl">
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-display text-xs font-semibold tracking-[0.22em] uppercase sm:text-sm">
+            <span aria-hidden="true" className="h-px w-8 bg-primary" />
+            {TAGS.map((tag, i) => (
+              <span key={tag} className="flex items-center gap-3">
+                {i > 0 && (
+                  <span aria-hidden="true" className="text-primary">
+                    •
+                  </span>
+                )}
+                {tag}
               </span>
-            </span>
-          </div>
+            ))}
+          </p>
 
-          <h1 className="font-poster text-[clamp(56px,8.5vw,132px)] leading-[0.92] font-normal tracking-[-0.025em] normal-case">
-            Liberte o seu
+          <h1 className="mt-6 font-poster text-[clamp(46px,6.6vw,108px)] leading-[0.92] font-normal tracking-[-0.01em] uppercase">
+            Supere seus limites.
             <br />
-            <span className="text-primary">potencial.</span>
+            <span className="text-primary">Construa sua melhor versão.</span>
           </h1>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            <a href="#planos" className="btn-primary btn-lg">
-              Comece agora →
-            </a>
-            <a href="#programas" className="btn-ghost btn-lg">
-              Conheça os programas
-            </a>
+            <SlideTextButton href="#planos" text="Quero começar agora →" hoverText="Ver planos →" />
+            <SlideTextButton
+              href="#modalidades"
+              text="Conhecer modalidades"
+              hoverText="Ver modalidades ↓"
+              variant="ghost"
+            />
           </div>
+
+          {location && (
+            <p className="mt-8 flex items-center gap-2 text-sm text-white/70">
+              <MapPin aria-hidden="true" className="h-4 w-4 text-primary" />
+              {SITE.address.mapsUrl ? (
+                <a
+                  href={SITE.address.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline-offset-4 hover:text-primary hover:underline"
+                >
+                  {location}
+                </a>
+              ) : (
+                location
+              )}
+            </p>
+          )}
         </div>
       </div>
     </section>
