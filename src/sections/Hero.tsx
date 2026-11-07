@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type PointerEvent } from 'react'
 import heroInstrutores from '../assets/hero-instrutores.jpg'
 
 /** Fotos do hero. Com mais de uma, elas alternam em crossfade e aparecem os indicadores. */
@@ -14,18 +14,35 @@ export function Hero() {
     return () => window.clearInterval(id)
   }, [])
 
+  const handlePointerMove = (e: PointerEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    e.currentTarget.style.setProperty('--px', String((e.clientX - rect.left) / rect.width - 0.5))
+    e.currentTarget.style.setProperty('--py', String((e.clientY - rect.top) / rect.height - 0.5))
+  }
+
   return (
-    <section id="inicio" className="relative flex min-h-screen items-stretch overflow-hidden bg-background">
-      <div aria-hidden="true" className="absolute inset-x-0 top-20 bottom-0 z-[1]">
-        {SLIDES.map((slide, i) => (
-          <img
-            key={slide.src}
-            src={slide.src}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover saturate-[1.05] contrast-[1.05] transition-opacity duration-[1200ms]"
-            style={{ objectPosition: slide.position, opacity: i === active ? 1 : 0 }}
-          />
-        ))}
+    <section
+      id="inicio"
+      onPointerMove={handlePointerMove}
+      className="relative flex min-h-screen items-stretch overflow-hidden bg-background"
+    >
+      <div aria-hidden="true" className="absolute inset-x-0 top-20 bottom-0 z-[1] overflow-hidden">
+        <div
+          className="absolute inset-0 transition-transform duration-[1400ms] ease-out motion-reduce:transform-none!"
+          style={{
+            transform: 'translate3d(calc(var(--px, 0) * -24px), calc(var(--py, 0) * -16px), 0) scale(1.05)',
+          }}
+        >
+          {SLIDES.map((slide, i) => (
+            <img
+              key={slide.src}
+              src={slide.src}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover saturate-[1.05] contrast-[1.05] transition-opacity duration-[1200ms]"
+              style={{ objectPosition: slide.position, opacity: i === active ? 1 : 0 }}
+            />
+          ))}
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(rgb(8_8_8/0.55),rgb(8_8_8/0.15)_35%,rgb(8_8_8/0.9)),linear-gradient(90deg,rgb(8_8_8/0.8),rgb(71_0_0/0.25)_60%,transparent)]" />
         <div className="absolute inset-0 bg-background/45 md:hidden" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-[38%] bg-[radial-gradient(circle,#fff_1.5px,transparent_2.2px)] bg-[length:32px_32px] opacity-10 [mask-image:linear-gradient(transparent,#000_30%,#000_70%,transparent)]" />
