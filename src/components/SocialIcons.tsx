@@ -58,7 +58,7 @@ export function SocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          className="grid h-10 w-10 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-primary hover:text-primary"
+          className="grid h-11 w-11 place-items-center rounded-full lg:h-10 lg:w-10 border border-border text-foreground transition-colors hover:border-primary hover:text-primary"
         >
           <Icon className="h-4 w-4" />
         </a>

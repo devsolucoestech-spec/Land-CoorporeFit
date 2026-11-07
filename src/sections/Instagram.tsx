@@ -1,4 +1,4 @@
-import { Expand } from 'lucide-react'
+import { Expand, Play } from 'lucide-react'
 import { useState } from 'react'
 import { Lightbox } from '../components/Lightbox'
 import { SectionTitle } from '../components/SectionTitle'
@@ -12,6 +12,7 @@ export function Instagram() {
   const { url, handle } = SITE.instagram
   const photos = INSTAGRAM_POSTS.filter((post) => post.src).map((post) => ({
     src: post.src!,
+    video: post.video,
     alt: post.alt ?? post.label,
     caption: `${post.label} · ${handle}`,
   }))
@@ -62,7 +63,7 @@ export function Instagram() {
                 key={post.label}
                 type="button"
                 onClick={() => setLightbox(index)}
-                aria-label={`Ampliar: ${post.label}`}
+                aria-label={post.video ? `Assistir vídeo: ${post.label}` : `Ampliar: ${post.label}`}
                 className={tile}
               >
                 <img
@@ -70,11 +71,24 @@ export function Instagram() {
                   alt={post.alt ?? post.label}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className={`h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${post.video ? 'object-bottom' : ''}`}
                 />
-                <span className="absolute inset-0 grid place-items-center bg-background/60 opacity-0 transition-opacity group-hover:opacity-100">
-                  <Expand aria-hidden="true" className="h-7 w-7 text-primary" />
-                </span>
+                {post.video ? (
+                  <>
+                    <span className="absolute top-4 right-4 grid h-11 w-11 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_10px_28px_-8px_rgb(8_8_8/0.9)]">
+                      <Play aria-hidden="true" className="ml-0.5 h-5 w-5 fill-current" />
+                    </span>
+                    <span className="absolute inset-0 grid place-items-center bg-background/55 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                      <span className="flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-display text-sm font-bold tracking-[0.15em] text-primary-foreground uppercase">
+                        <Play aria-hidden="true" className="h-4 w-4 fill-current" /> Assistir
+                      </span>
+                    </span>
+                  </>
+                ) : (
+                  <span className="absolute inset-0 grid place-items-center bg-background/60 opacity-0 transition-opacity group-hover:opacity-100">
+                    <Expand aria-hidden="true" className="h-7 w-7 text-primary" />
+                  </span>
+                )}
               </button>
             )
           }

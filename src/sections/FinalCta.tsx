@@ -12,23 +12,30 @@ export function FinalCta() {
       <div className="container-gym relative">
         <h2
           data-poster
-          className="origin-[50%_80%] font-poster text-[clamp(52px,10vw,160px)] leading-[0.88] font-normal tracking-[-0.02em] uppercase"
+          className="origin-[50%_80%] font-poster text-[clamp(42px,13vw,72px)] leading-[0.88] font-normal tracking-[-0.02em] uppercase md:text-[clamp(52px,10vw,160px)]"
         >
           Chegou a sua vez.
           <br />
           Vamos começar?
         </h2>
-        <p data-reveal className="mx-auto mt-10 max-w-lg text-lg text-white/90">
+        <p data-reveal className="mx-auto mt-6 max-w-lg text-base text-white/90 md:mt-10 md:text-lg">
           Dê o primeiro passo para uma rotina mais forte, saudável e ativa.
         </p>
-        <div data-reveal className="mt-10 flex flex-wrap justify-center gap-3">
-          <SlideTextButton href="#planos" text="Quero me matricular →" hoverText="Ver planos →" variant="dark" />
+        <div data-reveal className="mx-auto mt-8 flex max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center md:mt-10">
+          <SlideTextButton
+            href="#planos"
+            text="Quero me matricular →"
+            hoverText="Ver planos →"
+            variant="dark"
+            className="w-full sm:w-auto"
+          />
           <SlideTextButton
             href={whatsappUrl(WHATSAPP_MESSAGES.visit)}
             external
             text="Agendar uma visita"
             hoverText="Chamar no WhatsApp →"
             variant="light"
+            className="w-full sm:w-auto"
           />
         </div>
       </div>

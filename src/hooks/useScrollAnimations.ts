@@ -109,10 +109,13 @@ export function useScrollAnimations<T extends HTMLElement>() {
       animated('[data-split-title]').forEach((title) => {
         const words = splitWords(title)
         if (!words.length) return
+        // `y: 0` fixo: ao recarregar no meio da animação, o GSAP lê o deslocamento
+        // que sobrou como `y` em pixels e só zeraria o `yPercent`, escondendo o título.
         gsap.fromTo(
           words,
-          { yPercent: 115 },
+          { y: 0, yPercent: 115 },
           {
+            y: 0,
             yPercent: 0,
             ease: 'none',
             stagger: 0.12,

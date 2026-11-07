@@ -84,7 +84,7 @@ function Front({ plan }: { plan: Plan }) {
   const t = tone(plan.featured)
   const { reais, cents } = splitPrice(plan.price)
   return (
-    <div className={`flex h-full flex-col rounded-lg border p-7 ${t.surface}`}>
+    <div className={`flex h-full flex-col rounded-lg border p-5 min-[360px]:p-7 ${t.surface}`}>
       <PlanHeader plan={plan} subtitle={plan.cycle} />
       <p className={`mt-5 text-sm leading-relaxed ${t.muted}`}>{plan.description}</p>
 
@@ -129,7 +129,7 @@ function Front({ plan }: { plan: Plan }) {
 function Back({ plan }: { plan: Plan }) {
   const t = tone(plan.featured)
   return (
-    <div className={`flex h-full flex-col rounded-lg border p-7 ${t.surface}`}>
+    <div className={`flex h-full flex-col rounded-lg border p-5 min-[360px]:p-7 ${t.surface}`}>
       <PlanHeader plan={plan} subtitle="Condições do plano" />
 
       <div className={`mt-8 rounded-md border p-5 ${t.box}`}>
@@ -184,7 +184,7 @@ export function Pricing() {
               )}
               <CardFlip
                 label={`Plano ${plan.name}`}
-                className="h-[640px] w-full"
+                className="h-[680px] w-full min-[360px]:h-[640px]"
                 faceClassName="text-foreground"
                 front={<Front plan={plan} />}
                 back={<Back plan={plan} />}

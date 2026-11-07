@@ -17,6 +17,6 @@ export type TeamMember = {
 export const TEAM: TeamMember[] = [
   { name: 'Marcos Ribeiro', role: 'Funcional', photo: equipe1 },
   { name: 'Rafael Souza', role: 'Musculação', photo: equipe2 },
-  { name: 'Daniela Paiva', role: 'HIIT', photo: equipe3 },
+  { name: 'Daniela Paiva', role: 'GAP', photo: equipe3 },
   { name: 'Juliana Alves', role: 'Funcional', photo: equipe4 },
 ]

@@ -22,7 +22,12 @@ const HeroTransition = Object.assign((props: TransitionProps) => <PinReveal {...
   timing: { rest: 20, duration: 100 },
 }) satisfies TransitionComponent
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+/**
+ * Sem a transição fixa do hero quando o usuário pede menos movimento e no celular,
+ * onde a barra de endereço muda a altura da tela e a fixação costuma travar a rolagem.
+ */
+const simpleFlow =
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(max-width: 767px)').matches
 
 /**
  * Âncoras dentro do SectionFlow ficam presas na tela, então o navegador não sabe rolar até elas.
@@ -66,7 +71,7 @@ export default function App() {
       <Header />
       <main id="conteudo" ref={ref} className="overflow-x-clip text-foreground">
         <div className="scroll-bg" aria-hidden="true" />
-        {reduceMotion ? (
+        {simpleFlow ? (
           <>
             <Hero />
             <Marquee />

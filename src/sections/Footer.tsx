@@ -3,32 +3,17 @@ import { useState } from 'react'
 import { Logo } from '../components/Logo'
 import { PrivacyPolicy } from '../components/PrivacyPolicy'
 import { InstagramIcon, SocialLinks, WhatsappIcon } from '../components/SocialIcons'
-import { OPENING_HOURS, SITE, WHATSAPP_MESSAGES } from '../config/site'
+import { SITE, WHATSAPP_MESSAGES } from '../config/site'
 import { hasWhatsapp, whatsappUrl } from '../lib/whatsapp'
-
-const LINKS = [
-  { label: 'Início', href: '#inicio' },
-  { label: 'Modalidades', href: '#modalidades' },
-  { label: 'Planos', href: '#planos' },
-  { label: 'Horários', href: '#horarios' },
-  { label: 'Estrutura', href: '#estrutura' },
-  { label: 'Avaliações', href: '#depoimentos' },
-  { label: 'Dúvidas', href: '#faq' },
-]
 
 const linkClass = 'transition-colors hover:text-primary'
 const YEAR = new Date().getFullYear()
 
 export function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
-  const address = [SITE.address.street, SITE.address.city].filter(Boolean).join(' – ')
+  const cityLine = [SITE.address.city, SITE.address.zip].filter(Boolean).join(', ')
 
   const contacts = [
-    address && {
-      icon: MapPin,
-      label: address,
-      href: SITE.address.mapsUrl || undefined,
-    },
     SITE.phone && { icon: Phone, label: SITE.phone, href: `tel:${SITE.phone.replace(/\D/g, '')}` },
     hasWhatsapp && { icon: WhatsappIcon, label: 'WhatsApp', href: whatsappUrl(WHATSAPP_MESSAGES.general) },
     SITE.email && { icon: Mail, label: SITE.email, href: `mailto:${SITE.email}` },
@@ -37,38 +22,47 @@ export function Footer() {
 
   return (
     <footer id="contato" className="border-t border-primary/40 bg-background pt-16">
-      <div className="container-gym grid gap-12 pb-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1.2fr_1fr]">
-        <div>
+      <div className="container-gym flex flex-col items-center gap-10 pb-12 text-center lg:flex-row lg:items-start lg:justify-between lg:gap-10 lg:text-left">
+        <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-8 lg:flex-col lg:items-start lg:gap-5 xl:flex-row xl:items-center xl:gap-8">
           <Logo variant="full" />
-          <p className="mt-6 max-w-xs text-sm text-muted-foreground">{SITE.description}</p>
-          <div className="mt-6">
-            <SocialLinks />
-          </div>
+          <p className="max-w-xs text-sm text-muted-foreground sm:border-l sm:border-border sm:pl-8 sm:text-left lg:border-l-0 lg:pl-0 xl:border-l xl:pl-8">
+            {SITE.description}
+          </p>
         </div>
 
-        <nav aria-label="Rodapé">
-          <h2 className="text-base font-bold">Navegação</h2>
-          <ul className="mt-5 space-y-2.5 text-sm text-muted-foreground">
-            {LINKS.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className={linkClass}>
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {SITE.address.street && (
+          <div className="flex flex-col items-center gap-4 lg:items-start">
+            <h2 className="text-base font-bold">Localização</h2>
+            <a
+              href={SITE.address.mapsUrl || undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex min-h-11 items-start gap-2.5 text-sm text-muted-foreground ${linkClass}`}
+            >
+              <MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <address className="not-italic lg:whitespace-nowrap">
+                {SITE.address.street}
+                {cityLine && (
+                  <>
+                    <br />
+                    {cityLine}
+                  </>
+                )}
+              </address>
+            </a>
+          </div>
+        )}
 
-        <div>
+        <div className="flex flex-col items-center gap-4 lg:items-start">
           <h2 className="text-base font-bold">Contato</h2>
-          <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
+          <ul className="flex flex-col items-center justify-center gap-x-8 gap-y-1 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:gap-y-3 lg:flex-col lg:items-start">
             {contacts.map(({ icon: Icon, label, href }) => (
-              <li key={label} className="flex items-start gap-3">
-                <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <li key={label} className="flex min-h-11 items-center gap-2.5 sm:min-h-0">
+                <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-primary" />
                 {href ? (
                   <a
                     href={href}
-                    className={linkClass}
+                    className={`inline-flex min-h-11 items-center sm:min-h-0 ${linkClass}`}
                     {...(href.startsWith('http') && { target: '_blank', rel: 'noopener noreferrer' })}
                   >
                     {label}
@@ -81,29 +75,23 @@ export function Footer() {
           </ul>
         </div>
 
-        <div>
-          <h2 className="text-base font-bold">Funcionamento</h2>
-          <dl className="mt-5 space-y-2.5 text-sm">
-            {OPENING_HOURS.items.map((item) => (
-              <div key={item.days}>
-                <dt className="text-muted-foreground">{item.days}</dt>
-                <dd className="font-semibold">{item.hours}</dd>
-              </div>
-            ))}
-          </dl>
-          {!OPENING_HOURS.confirmed && (
-            <p className="mt-3 text-xs text-muted-foreground">Horários provisórios, sujeitos a confirmação.</p>
-          )}
+        <div className="flex flex-col items-center gap-4 lg:items-end">
+          <h2 className="text-base font-bold whitespace-nowrap">Redes sociais</h2>
+          <SocialLinks />
         </div>
       </div>
 
       <div className="border-t border-border">
-        <div className="container-gym flex flex-col items-center justify-between gap-3 py-6 text-xs text-muted-foreground sm:flex-row">
+        <div className="container-gym flex flex-col items-center justify-between gap-1 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] text-center text-xs text-muted-foreground sm:flex-row sm:gap-3 sm:text-left sm:max-[1360px]:pr-20">
           <p>
             © {YEAR} {SITE.legalName || SITE.name}
             {SITE.cnpj && ` · CNPJ ${SITE.cnpj}`}. Todos os direitos reservados.
           </p>
-          <button type="button" onClick={() => setPrivacyOpen(true)} className={`${linkClass} underline-offset-4 hover:underline`}>
+          <button
+            type="button"
+            onClick={() => setPrivacyOpen(true)}
+            className={`min-h-11 underline-offset-4 hover:underline sm:min-h-0 ${linkClass}`}
+          >
             Política de privacidade
           </button>
         </div>
